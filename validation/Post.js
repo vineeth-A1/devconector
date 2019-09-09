@@ -22,4 +22,3 @@ if (!Validator.isLength(data.text, { min: 10, max: 300 })) {
   };
 
 }
-       
