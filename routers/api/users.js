@@ -18,6 +18,12 @@ const User = require('../../models/User');
 // @access  Public
 router.get('/test', (req, res) => res.json({ msg: 'Users Works' }));
 
+//router.get('/', (req, res)=> {
+//rfes.send({msg: 'hello'})
+//})
+
+
+
 // @route   POST api/users/register
 // @desc    Register user
 // @access  Public
@@ -53,7 +59,7 @@ router.post('/register', (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            .then(user => res.json(user))
+            .then(user => res.status(201).json({user}))
             .catch(err => console.log(err));
         });
       });
@@ -69,7 +75,7 @@ router.post('/login', (req, res) => {
 
   // Check Validation
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json({errors});
   }
 
   const email = req.body.email;
@@ -80,7 +86,7 @@ router.post('/login', (req, res) => {
     // Check for user
     if (!user) {
       errors.email = 'User not found';
-      return res.status(404).json(errors);
+      return res.status(400).json({errors});
     }
 
     // Check Password
@@ -112,6 +118,12 @@ router.post('/login', (req, res) => {
 // @route   GET api/users/current
 // @desc    Return current user
 // @access  Private
+router.get('/all', (req,res)=>{
+  User.find({}).then(users=>{
+    res.json({users})
+  }).catch(err => res.json({err}));
+})
+
 router.get(
   '/current',
   passport.authenticate('jwt', { session: false }),

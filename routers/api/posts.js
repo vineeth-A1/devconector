@@ -24,7 +24,7 @@ router.get('/' , (req, res) =>{
 Post.find()
 .sort({date: -1})
 .then(posts => res.json(posts))
-.catch(posts => res.status(404));
+.catch( () => res.status(404));
 });
    
 
