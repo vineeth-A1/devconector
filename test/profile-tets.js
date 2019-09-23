@@ -87,12 +87,12 @@ describe("profile", () => {
       .catch(() => console.log("errors"));
   });
 
-  it.only("post/experience", done => {
+  it("post/ required fields", done => {
     let token = " ";
     chai
       .request(app)
       .post(login_route)
-      .send({ email: "hitler123@gmail.com", password: "789456" })
+      .send({ email: "boppudi123@gmail.com", password: "1234567" })
       .then(res => {
         console.log(res.body.token);
         token = res.body.token;
@@ -100,13 +100,90 @@ describe("profile", () => {
           .request(app)
           .post(profile_route + "/experience")
           .set("Authorization", token)
-          .send({ title: "" })
-          .then( () => {
-            expect(400);
-
+          .send({ title: "educztion", company: "ttcs", from: " " })
+          .then(res => {
+            expect(res).to.have.status(400);
+            console.log("sent");
             done();
           })
           .catch(() => console.log("error"));
       });
   });
-});
+
+  it("post/all fields are entered", done => {
+    let token = " ";
+    chai
+      .request(app)
+      .post(login_route)
+      .send({ email: "boppudi123@gmail.com", password: "1234567" })
+      .then(res => {
+        console.log(res.body.token);
+        token = res.body.token;
+        chai
+          .request(app)
+          .post(profile_route + "/experience")
+          .set("Authorization", token)
+          .send({
+            title: "developer",
+            company: "tss",
+            from: "02/03/2000 ",
+            to: "12/12/2007"
+          })
+          .then(res => {
+            expect(res).to.have.status(200);
+            console.log("sent");
+            done();
+          })
+          .catch(() => console.log("error"));
+      });
+  });
+  it("get/education are required", done => {
+    let token = "";
+    chai
+      .request(app)
+      .post(login_route)
+      .send({ email: "boppudi123@gmail.com", password: "1234567" })
+      .then(res => {
+        token = res.body.token;
+        console.log(res.body.token);
+        chai
+          .request(app)
+          .post(profile_route + "/education")
+          .set("Authorization", token)
+          .send({ school: " "
+        })
+          .then(res => {
+            expect(res).to.have.status(400);
+        console.log("sent")
+            done();
+          })
+          .catch(() => console.log("error"));
+      });
+  });
+it("get/ fields are correct status200" , (done) =>{
+  let token = "";
+    chai
+      .request(app)
+      .post(login_route)
+      .send({ email: "boppudi123@gmail.com", password: "1234567" })
+      .then(res => {
+        token = res.body.token;
+        console.log(res.body.token);
+        chai
+          .request(app)
+          .post(profile_route + "/education")
+          .set("Authorization", token)
+          .send({ school: "harshini",
+        degree: "btech",
+      fieldofstudy: "ece",
+    from:"10/10/2001",
+  to:"02/02/2004" })
+          .then(res => {
+            expect(res).to.have.status(200);
+            console.log("details sent");
+            done();
+          })
+          .catch(() => console.log("error"));
+      });
+})
+  });
